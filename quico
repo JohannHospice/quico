@@ -34,15 +34,10 @@ def parse_known_args():
 
 def read_proc(title, cmd):
     print(f"+{title}: start ({cmd})")
-    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    while True:
-        line = proc.stdout.readline()
-        if not line:
-            break
-        #the real code does filtering here
-        print(line.decode('utf-8').strip())
-    proc.wait()
-    print(f"+{title} end")
+    try:
+        subprocess.check_call(cmd, shell=True)
+    except:
+        print(f"+{title}: raised error")
 
 class CommandBuilder:
     cmd = []
