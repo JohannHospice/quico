@@ -12,12 +12,16 @@ def main():
     
     run_cmd = CommandBuilder(['docker', 'run'])
     run_cmd.append_with_option('--network', args.network)
+    run_cmd.append_with_option('-v', args.volume)
     run_cmd.append_with_option('-p', args.publish)
     run_cmd.append_with_option('-ti', args.tag)
     run_cmd.append(unknown_joined)
-    
-    read_proc("build", build_cmd.build())
-    read_proc("run", run_cmd.build())
+
+    try :
+        read_proc('build', build_cmd.build())
+        read_proc('run', run_cmd.build())
+    except Exception as e:
+        print(e)
 
 def parse_known_args():
     parser = argparse.ArgumentParser(description='Quico ou quick-container permet de compiler puis lancer rapidement un conteneur docker.')
@@ -26,6 +30,7 @@ def parse_known_args():
     parser.add_argument('-n', '--network', help="Réseau ou lancer le conteneur docker", default='bridge', required=False)
     parser.add_argument('-f', '--file', help="Chemin vers le Dockerfile à compiler", default='Dockerfile', required=False)
     parser.add_argument('-p', '--publish', required=False)
+    parser.add_argument('-v', '--volume', required=False)
     
     args, unknown =  parser.parse_known_args()
     unknown_joined = ' '.join(unknown)
@@ -37,7 +42,7 @@ def read_proc(title, cmd):
     try:
         subprocess.check_call(cmd, shell=True)
     except:
-        print(f"+{title}: raised error")
+        raise Exception(f"+{title}: raised error")
 
 class CommandBuilder:
     cmd = []
