@@ -12,7 +12,8 @@ def main():
     
     run_cmd = CommandBuilder(['docker', 'run'])
     run_cmd.append_with_option('--network', args.network)
-    run_cmd.append_with_option('-v', args.volume)
+    for volume in args.volume:
+        run_cmd.append_with_option('-v', volume)
     run_cmd.append_with_option('-p', args.publish)
     run_cmd.append_with_option('-ti', args.tag)
     run_cmd.append(unknown_joined)
@@ -30,7 +31,7 @@ def parse_known_args():
     parser.add_argument('-n', '--network', help="Réseau ou lancer le conteneur docker", default='bridge', required=False)
     parser.add_argument('-f', '--file', help="Chemin vers le Dockerfile à compiler", default='Dockerfile', required=False)
     parser.add_argument('-p', '--publish', required=False)
-    parser.add_argument('-v', '--volume', required=False)
+    parser.add_argument('-v', '--volume', action='append', required=False)
     
     args, unknown =  parser.parse_known_args()
     unknown_joined = ' '.join(unknown)
