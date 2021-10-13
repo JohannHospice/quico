@@ -12,7 +12,7 @@ def main():
     
     run_cmd = CommandBuilder(['docker', 'run'])
     run_cmd.append_with_option('--network', args.network)
-    for volume in args.volume:
+    for volume in args.volume if args.volume else []:
         run_cmd.append_with_option('-v', volume)
     run_cmd.append_with_option('-p', args.publish)
     run_cmd.append_with_option('-ti', args.tag)
